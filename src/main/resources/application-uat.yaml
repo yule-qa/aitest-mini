@@ -1,0 +1,11 @@
+AI:
+  key1: Hogwarts
+server:
+  port: 8084
+#  connection-timeout: 18000000        这个只支持  spring-boot 2.1 6（junit 4） 版本以下,最新版本不支持
+servlet:
+  session:
+  timeout: 30m #3Q分钟，测试的话时间不能太短，否则不准。m(分钟)， s(秒)， h(小时)， 不写单位默认毫秒
+spring:   #这项配置一般都是spring-cloud 使用，用于区分哪个spring-boot
+  application:
+    name: aitest
