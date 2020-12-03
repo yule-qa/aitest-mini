@@ -1,15 +1,21 @@
 package com.hogwartsmini.demo.service.Impl;
 
+import com.hogwartsmini.demo.common.HogwartsToken;
+import com.hogwartsmini.demo.common.TokenDb;
+import com.hogwartsmini.demo.common.UserBaseStr;
 import com.hogwartsmini.demo.dao.HogwartsTestUserMapper;
 import com.hogwartsmini.demo.dto.ResultDto;
+import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.UserDto;
 import com.hogwartsmini.demo.entity.HogwartsTestUser;
 import com.hogwartsmini.demo.service.AiTestUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 //@Component //加上这个注解，AiTestUserServiceImpl就注入到了spring 容器里了，此时就找到了这个类
@@ -18,6 +24,8 @@ public class AiTestUserServiceImpl implements AiTestUserService {
 
     @Autowired
     private HogwartsTestUserMapper hogwartsTestUserMapper;
+    @Autowired
+    private TokenDb tokenDb;
 
     /**
      * 登录接口实现
@@ -25,15 +33,44 @@ public class AiTestUserServiceImpl implements AiTestUserService {
      * @return
      */
     @Override
-    public String login(UserDto userDto){
+    public ResultDto<HogwartsToken> login(UserDto userDto){
         /**
-         * todo
+         * 登录接口实现
          * 这里应该判断数据库是否存在该用户，密码是否正确，再return
          */
-        System.out.println("用户名是"+userDto.getUserName());
-        System.out.println("密码是"+userDto.getPassword());
+        String userName=userDto.getUserName();
+        String password=userDto.getPassword();
+        System.out.println("用户名是"+userName);
+        System.out.println("密码是"+userName);
+        //1、 获取用户录入的用户名/密码并用MD5加密String newPwd = DigestUtils.md5Diges tAsHex()
+        String newPwd=DigestUtils.md5DigestAsHex((UserBaseStr.md5Hex_sign+userName+password).getBytes());
+        //2、 根据用户名+新密码查询数据库中是否存在数据
+        HogwartsTestUser queryHogwartsTestUser=new HogwartsTestUser();
+        queryHogwartsTestUser.setUserName(userName);
+        queryHogwartsTestUser.setPassword(newPwd);
 
-        return userDto.getUserName()+"---"+userDto.getPassword();
+        HogwartsTestUser resultHogwartsTestUser=hogwartsTestUserMapper.selectOne(queryHogwartsTestUser);
+
+        //3、若不存在提示:用户不存在或密码错误
+        if(Objects.isNull(resultHogwartsTestUser)){
+            return ResultDto.fail("用户不存在或密码错误");
+        }
+        //4、若存在，则创建Token对象，生成token并将相关信息存入TokenDto
+        String tokenStr=DigestUtils.md5DigestAsHex((System.currentTimeMillis()+userName+password).getBytes());
+        HogwartsToken hogwartsToken=new HogwartsToken();
+        hogwartsToken.setToken(tokenStr);
+        TokenDto tokenDto=new TokenDto();
+        tokenDto.setUserId(resultHogwartsTestUser.getId());
+        tokenDto.setUserName(resultHogwartsTestUser.getUserName());
+        tokenDto.setDefaultJenkinsId(resultHogwartsTestUser.getDefaultJenkinsId());
+        tokenDto.setToken(tokenStr);
+        tokenDto.setUserName(resultHogwartsTestUser.getUserName());
+        tokenDto.setUserName(resultHogwartsTestUser.getUserName());
+
+        //存入缓存文件TokenDb
+        tokenDb.addUserInfo(tokenStr,tokenDto);
+
+        return ResultDto.success("成功",hogwartsToken);
     }
 
     /**
@@ -43,6 +80,22 @@ public class AiTestUserServiceImpl implements AiTestUserService {
      */
     @Override
     public ResultDto<HogwartsTestUser> save(HogwartsTestUser hogwartsTestUser) {
+        //在调用数据库前，先判断数据库是否存在用户，然后将密码做md5加密
+        //1、 校验用户名是否已经存在
+        String userName= hogwartsTestUser.getUserName();
+
+        HogwartsTestUser queryHogwartsTestUser=new HogwartsTestUser();
+        queryHogwartsTestUser.setUserName(userName);
+        HogwartsTestUser resultHogwartsTestUser=hogwartsTestUserMapper.selectOne(queryHogwartsTestUser);
+        if(Objects.nonNull(resultHogwartsTestUser)){
+            return ResultDto.fail("用户名已存在！");
+        }
+
+        //2.  密码MD5加密存储:
+        String password= hogwartsTestUser.getPassword();
+        String newPwd= DigestUtils.md5DigestAsHex((UserBaseStr.md5Hex_sign+userName+password).getBytes());
+        hogwartsTestUser.setPassword(newPwd);
+        //3.创建用户
         hogwartsTestUser.setCreateTime(new Date());
         hogwartsTestUser.setUpdateTime(new Date());
 

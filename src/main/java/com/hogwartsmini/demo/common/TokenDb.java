@@ -9,7 +9,11 @@ import org.springframework.util.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component  // 将这个类注册到spring容器里，别处可用
+/**
+ * 这个文件用于缓存所有token信息
+ */
+
+@Component  // 这个单词的意思是组件，就是声明这个类为spring容器里的一个组件，即是将这个类注册到spring容器里，别处可以用@Autowired引入使用
 public class TokenDb {
     //1、定义用于缓存token的map(key=token)
     private Map<String, TokenDto> tokenMap=new HashMap();

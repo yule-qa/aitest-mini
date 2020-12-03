@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class GlobalExceptionHandler {
 
     //业务异常处理
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)  // 修改响应状态码
+   // @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)  // 修改响应状态码,无论什么响应码 都会修改成这个码
     @ExceptionHandler({ServiceException.class}) //统一处理某一类异常，声明该方法用于捕获value所指的类型的异常（注意：当该异常的子父类都被声明时，按照先子后父的顺序进行捕获）
     public String serviceExceptionHandler(ServiceException se){
         return resultFormat(se);
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
         log.error(t.getMessage());
         String tips="系统繁忙，请稍后重试";
         if(t instanceof ServiceException){
-            return "业务异常 "+tips;
+            return "业务异常 "+t.getMessage();
         }
         if(t instanceof  Exception){
             return "非业务异常 "+tips;

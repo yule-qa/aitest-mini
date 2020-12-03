@@ -1,5 +1,6 @@
 package com.hogwartsmini.demo.service;
 
+import com.hogwartsmini.demo.common.HogwartsToken;
 import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.UserDto;
 import com.hogwartsmini.demo.entity.HogwartsTestUser;
@@ -13,7 +14,7 @@ public interface AiTestUserService{
      * @param userDto
      * @return
      */
-    public String login(UserDto userDto);
+    public ResultDto<HogwartsToken> login(UserDto userDto);
 
     /**
      * 注册用户

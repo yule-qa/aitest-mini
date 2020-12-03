@@ -1,11 +1,11 @@
 package com.hogwartsmini.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hogwartsmini.demo.common.HogwartsToken;
 import com.hogwartsmini.demo.common.ServiceException;
-import com.hogwartsmini.demo.dto.AddHogwartsTestUserDto;
-import com.hogwartsmini.demo.dto.ResultDto;
-import com.hogwartsmini.demo.dto.UpdateHogwartsTestUserDto;
-import com.hogwartsmini.demo.dto.UserDto;
+import com.hogwartsmini.demo.common.TokenDb;
+import com.hogwartsmini.demo.common.UserBaseStr;
+import com.hogwartsmini.demo.dto.*;
 import com.hogwartsmini.demo.entity.HogwartsTestUser;
 import com.hogwartsmini.demo.service.AiTestUserService;
 import io.swagger.annotations.Api;
@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Api(tags = "霍格沃兹测试学院--用户管理")
@@ -28,23 +29,30 @@ public class AiTestUserController {
 
     @Autowired
     private AiTestUserService aiTestUserService;
+    @Autowired
+    private TokenDb tokenDb;
+
     @Value("${AI.key1}")
     private String aikey1; //在配置文件application-dev.yaml里配置了信息
 
     @ApiOperation("登录接口")
     //@RequestMapping(value ="login",method = RequestMethod.POST)
     @PostMapping("login")    // 等同于上面的注解，是上面注解的简略化
-    public String login(@RequestBody UserDto userDto){
-        String result=aiTestUserService.login(userDto);
+    public ResultDto<HogwartsToken> login(@RequestBody UserDto userDto){
 
-        if(userDto.getUserName().contains("error2")){
-            throw new NullPointerException();
-        }
-        if(userDto.getUserName().contains("error")) {
-            ServiceException.throwEx("用户名中含有error");
-        }
-        return "成功"+result+"        aikey1="+aikey1;
+
+//        if(userDto.getUserName().contains("error2")){
+//            throw new NullPointerException();
+//        }
+//        if(userDto.getUserName().contains("error")) {
+//            ServiceException.throwEx("用户名中含有error");
+//        }
+
+        System.out.println("aikey1="+aikey1);
+        return aiTestUserService.login(userDto);
+
     }
+
 
     @ApiOperation("注册接口")
     @PostMapping("register")
@@ -117,6 +125,15 @@ public class AiTestUserController {
         HogwartsTestUser hogwartsTestUser=new HogwartsTestUser();
         hogwartsTestUser.setId(userId);
         return aiTestUserService.delete(userId);
+    }
+
+
+    @GetMapping("isLogin")
+    public ResultDto isLogin(HttpServletRequest request){
+        String tokenStr=request.getHeader(UserBaseStr.LOGIN_TOKEN);
+        TokenDto tokenDto=tokenDb.getUserInfo(tokenStr);
+        return ResultDto.success("成功",tokenDto);
+
     }
 
 }
