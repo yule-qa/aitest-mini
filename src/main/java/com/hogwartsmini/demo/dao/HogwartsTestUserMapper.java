@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository    //加了这个注解，就生成了一个bean
+@Repository    //dao层加了这个注解，就生成了一个bean，将这个bean 注入容器，别处就可以引用了
 public interface HogwartsTestUserMapper extends MySqlExtensionMapper<HogwartsTestUser> {
 
     //这里@Param 括号里的值，代表mapper.xml配置文件里的值，必须一一对应
