@@ -35,7 +35,7 @@
     <concurrentBuild>false</concurrentBuild>
     <builders>
         <hudson.tasks.Shell>
-            <command>eval "${testCommand}"</command>
+            <command>eval "${testCommand}"</command> <!-- eval 是将字符串变成可执行的命令，然后再去执行命令>
             <configuredLocalRules/>
         </hudson.tasks.Shell>
     </builders>

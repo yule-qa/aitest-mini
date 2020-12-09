@@ -13,4 +13,6 @@ public interface HogwartsTestUserMapper extends MySqlExtensionMapper<HogwartsTes
     //这里@Param 括号里的值，代表mapper.xml配置文件里的值，必须一一对应
     int updateUserDemo(@Param("username") String username,@Param("password") String password,@Param("email") String email,@Param("id") Integer id);
     List<HogwartsTestUser> getByName(@Param("userName") String userName, @Param("userId") Integer userId);
+    int updateUserDefaultJenkinsId(@Param("defaultJenkinsId") Integer defaultJenkinsId, @Param("userId") Integer userId);
+
 }

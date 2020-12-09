@@ -36,34 +36,34 @@ public class JenkinsUtil {
         //获取jenkin 里的jobs，并创建job
         JenkinsServer jenkinsServer=new JenkinsServer(jenkinsHttpClient);
 
-       jenkinsServer.createJob(hogwartsTestJenkins.getName(),jobConfiXml,true);
-//       jenkinsServer.updateJob(hogwartsTestJenkins.getName(),jobConfiXml,true);
-        Map<String, Job> jobMap=jenkinsServer.getJobs();
-
-        Job job=jobMap.get(hogwartsTestJenkins.getName());
-
-        Map<String, String> map=new HashMap<>();
+//       jenkinsServer.createJob(hogwartsTestJenkins.getName(),jobConfiXml,true);
+       jenkinsServer.updateJob(hogwartsTestJenkins.getName(),jobConfiXml,true);
+//        Map<String, Job> jobMap=jenkinsServer.getJobs();
+//
+//        Job job=jobMap.get(hogwartsTestJenkins.getName());
+//
+//        Map<String, String> map=new HashMap<>();
 //        map.put("userId",hogwartsTestJenkins.getCreateUserId().toString());
 //        map.put("remark",hogwartsTestJenkins.getRemark());
 //        map.put()
-        map=beanToMap(hogwartsTestJenkins);
-        for(String key:map.keySet()){
-            System.out.println(key);
-        }
-        job.build(map,true);
-    }
+//        map=beanToMap(hogwartsTestJenkins);
+//        for(String key:map.keySet()){
+//            System.out.println(key);
+//        }
+//        job.build(map,true);
+   }
 
     /**
      * 将对象属性转化为map结合
      */
-    public static <T> Map<String, String> beanToMap(T bean) {
-        Map<String, String> map = new HashMap<>();
-        if (bean != null) {
-            BeanMap beanMap = BeanMap.create(bean);
-            for (Object key : beanMap.keySet()) {
-                map.put(key+"", beanMap.get(key).toString());
-            }
-        }
-        return map;
-    }
+//    public static <T> Map<String, String> beanToMap(T bean) {
+//        Map<String, String> map = new HashMap<>();
+//        if (bean != null) {
+//            BeanMap beanMap = BeanMap.create(bean);
+//            for (Object key : beanMap.keySet()) {
+//                map.put(key+"", beanMap.get(key).toString());
+//            }
+//        }
+//        return map;
+//    }
 }

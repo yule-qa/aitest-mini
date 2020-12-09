@@ -1,5 +1,6 @@
 package com.hogwartsmini.demo.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -76,5 +77,6 @@ public class HogwartsTestJenkins extends BaseEntityNew {
      */
     @Column(name = "update_time")
     private Date updateTime;
+
 
 }

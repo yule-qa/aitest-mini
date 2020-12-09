@@ -1,12 +1,13 @@
 package com.hogwartsmini.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hogwartsmini.demo.common.PageTableRequest;
 import com.hogwartsmini.demo.common.TokenDb;
 import com.hogwartsmini.demo.common.UserBaseStr;
 import com.hogwartsmini.demo.dto.*;
 import com.hogwartsmini.demo.dto.jenkins.AddHogwartsTestJenkinsDto;
+import com.hogwartsmini.demo.dto.jenkins.QueryHogwartsTestJenkinsListDto;
 import com.hogwartsmini.demo.entity.HogwartsTestJenkins;
-import com.hogwartsmini.demo.entity.HogwartsTestUser;
 import com.hogwartsmini.demo.service.AiTestJenkinsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,10 +52,15 @@ public class AiTestJenkinsController {
         //通过Dto里查询到用户信息
         hogwartsTestJenkins.setCreateUserId(tokenDto.getUserId());
         log.info("添加jenkins job的参数为"+ JSONObject.toJSONString(hogwartsTestJenkins));
-        return  aiTestJenkinsService.save(hogwartsTestJenkins);
+        return  aiTestJenkinsService.save(tokenDto,hogwartsTestJenkins,addHogwartsTestJenkinsDto);
     }
 
+    @ApiOperation("jenkins分页接口")
+    @GetMapping()    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
+    public ResultDto<HogwartsTestJenkins> list(HttpServletRequest request,
+                                               PageTableRequest<QueryHogwartsTestJenkinsListDto> pageTableRequest)  {
 
-
+        return aiTestJenkinsService.list(pageTableRequest);
+    }
 
 }

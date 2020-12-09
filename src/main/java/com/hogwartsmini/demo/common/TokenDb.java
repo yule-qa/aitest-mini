@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 这个文件用于缓存所有token信息
@@ -46,5 +47,15 @@ public class TokenDb {
     //6、判断token是否有效,true 是，false 否
     public boolean isLogin(String token){
         return tokenMap.get(token) !=null;
+    }
+
+    //也可以实现成登录用户互踢，2种方式，1是id前后缀，2是id-token=map的key-value
+    public TokenDto addTokenDto(String token,TokenDto tokenDto){
+
+        if(Objects.isNull(tokenDto)){
+            return tokenDto;
+        }
+
+        return tokenMap.put(token,tokenDto);
     }
 }
