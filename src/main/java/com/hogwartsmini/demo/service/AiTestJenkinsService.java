@@ -1,6 +1,7 @@
 package com.hogwartsmini.demo.service;
 
 import com.hogwartsmini.demo.common.PageTableRequest;
+import com.hogwartsmini.demo.common.PageTableResponse;
 import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.jenkins.AddHogwartsTestJenkinsDto;
@@ -25,5 +26,5 @@ public interface AiTestJenkinsService {
      */
 
 
-    public ResultDto<HogwartsTestJenkins> list(PageTableRequest<QueryHogwartsTestJenkinsListDto> pageTableRequest);
+    public ResultDto<PageTableResponse<HogwartsTestJenkins>> list(PageTableRequest<QueryHogwartsTestJenkinsListDto> pageTableRequest);
 }

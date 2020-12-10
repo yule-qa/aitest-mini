@@ -1,12 +1,14 @@
 package com.hogwartsmini.demo.service.Impl;
 
 import com.hogwartsmini.demo.common.PageTableRequest;
+import com.hogwartsmini.demo.common.PageTableResponse;
 import com.hogwartsmini.demo.common.TokenDb;
 import com.hogwartsmini.demo.dao.HogwartsTestJenkinsMapper;
 import com.hogwartsmini.demo.dao.HogwartsTestUserMapper;
 import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.jenkins.AddHogwartsTestJenkinsDto;
+import com.hogwartsmini.demo.dto.jenkins.QueryHogwartsTestJenkinsListDto;
 import com.hogwartsmini.demo.entity.HogwartsTestJenkins;
 import com.hogwartsmini.demo.service.AiTestJenkinsService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -68,8 +71,18 @@ public class AiTestJenkinsServiceImpl implements AiTestJenkinsService {
      * @throws URISyntaxException
      */
     @Override
-    public ResultDto<HogwartsTestJenkins> list( PageTableRequest pageTableRequest)  {
-        return null;
+    public ResultDto<PageTableResponse<HogwartsTestJenkins>> list( PageTableRequest<QueryHogwartsTestJenkinsListDto> pageTableRequest)  {
+        Integer pageNum=pageTableRequest.getPageNum();
+        Integer pageSize=pageTableRequest.getPageSize();
+        QueryHogwartsTestJenkinsListDto params=pageTableRequest.getParams();
+
+        List<HogwartsTestJenkins> list=hogwartsTestJenkinsMapper.list(params,(pageNum-1) * pageSize,pageSize);
+        Integer count=hogwartsTestJenkinsMapper.count(params);
+
+        PageTableResponse pageTableResponse = new PageTableResponse();
+        pageTableResponse.setData(list);
+        pageTableResponse.setRecordsTotal(count);
+        return ResultDto.success("成功",pageTableResponse);
     }
 
 
