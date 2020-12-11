@@ -32,6 +32,6 @@
     <if test="params.name !=null and params.name !=''">
       and htj.name = #{params.name}
     </if>
-    limit #{params.pageNum},#{params.pageSize}
+    limit #{pageNum},#{pageSize}
   </select>
 </mapper>
