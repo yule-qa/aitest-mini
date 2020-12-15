@@ -9,6 +9,7 @@ import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.jenkins.AddHogwartsTestJenkinsDto;
 import com.hogwartsmini.demo.dto.jenkins.QueryHogwartsTestJenkinsListDto;
+import com.hogwartsmini.demo.entity.HogwartsTestCase;
 import com.hogwartsmini.demo.entity.HogwartsTestJenkins;
 import com.hogwartsmini.demo.service.AiTestCaseService;
 import com.hogwartsmini.demo.service.AiTestJenkinsService;
@@ -36,13 +37,13 @@ public class AiTestCaseServiceImpl implements AiTestCaseService {
 
     /**
      * 添加jenkins
-     * @param hogwartsTestJenkins
+     * @param hogwartsTestCase
      * @return
      */
     @Override
-    public ResultDto saveFile(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins, AddHogwartsTestJenkinsDto addHogwartsTestJenkinsDto) throws IOException, URISyntaxException {
-
-        return ResultDto.success("成功",hogwartsTestJenkins);
+    public ResultDto saveFile(TokenDto tokenDto, HogwartsTestCase hogwartsTestCase) throws IOException, URISyntaxException {
+        //todo
+        return ResultDto.success("成功",hogwartsTestCase);
     }
 
 

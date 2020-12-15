@@ -1,14 +1,19 @@
 package com.hogwartsmini.demo.controller;
 
 import com.hogwartsmini.demo.common.TokenDb;
+import com.hogwartsmini.demo.common.UserBaseStr;
 import com.hogwartsmini.demo.dto.ResultDto;
+import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.testcase.AddHogwartsTestCaseDto;
+import com.hogwartsmini.demo.entity.HogwartsTestCase;
 import com.hogwartsmini.demo.service.AiTestCaseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +35,7 @@ public class AiTestCaseController {
     private TokenDb tokenDb;
 
 
-    @ApiOperation("增加文件上传接口")
+    @ApiOperation("新增文件类型测试用例接口")
     //@RequestMapping(value ="login",method = RequestMethod.POST)
     @PostMapping("file")    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
     public ResultDto saveFile(HttpServletRequest request
@@ -44,7 +49,13 @@ public class AiTestCaseController {
             InputStream inputStream=caseFile.getInputStream();
             String caseData = IOUtils.toString(inputStream);
             log.info("caseData=="+caseData);
-            return ResultDto.success("成功",caseData);
+
+            TokenDto tokenDto=tokenDb.getUserInfo(request.getHeader(UserBaseStr.LOGIN_TOKEN));
+            HogwartsTestCase hogwartsTestCase =new HogwartsTestCase();
+            BeanUtils.copyProperties(addHogwartsTestCaseDto,hogwartsTestCase);
+            hogwartsTestCase.setCreateUserId(tokenDto.getUserId());
+            aiTestCaseService.saveFile(tokenDto,hogwartsTestCase);
+            return ResultDto.success("成功","测试用例名字："+addHogwartsTestCaseDto.getCaseName()+"     测试文件内容为："+caseData);
     }
 
 

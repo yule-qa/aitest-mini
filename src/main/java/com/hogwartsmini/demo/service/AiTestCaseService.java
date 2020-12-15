@@ -6,6 +6,7 @@ import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.jenkins.AddHogwartsTestJenkinsDto;
 import com.hogwartsmini.demo.dto.jenkins.QueryHogwartsTestJenkinsListDto;
+import com.hogwartsmini.demo.entity.HogwartsTestCase;
 import com.hogwartsmini.demo.entity.HogwartsTestJenkins;
 
 import java.io.IOException;
@@ -15,10 +16,10 @@ public interface AiTestCaseService {
 
     /**
      * 添加文件接口
-     * @param hogwartsTestJenkins
+     * @param hogwartsTestCase
      * @return
      */
-    public ResultDto saveFile(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins, AddHogwartsTestJenkinsDto addHogwartsTestJenkinsDto) throws IOException, URISyntaxException;
+    public ResultDto saveFile(TokenDto tokenDto, HogwartsTestCase hogwartsTestCase) throws IOException, URISyntaxException;
 
 
 }
