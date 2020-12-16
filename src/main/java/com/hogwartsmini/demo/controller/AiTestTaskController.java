@@ -17,10 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,9 +40,9 @@ public class AiTestTaskController {
 
 
     @ApiOperation("添加测试任务接口")
-    @PostMapping("file")    // 表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
-    public ResultDto saveFile(HttpServletRequest request
-                            , TestTaskDto taskDto) throws IOException, URISyntaxException {
+    @PostMapping()    // 表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
+    public ResultDto save(HttpServletRequest request
+                            , @RequestBody  TestTaskDto taskDto) throws IOException, URISyntaxException {
         //参数校验
         List<Integer> caseIdList=taskDto.getCaseIdList();
         if(Objects.isNull(caseIdList) || caseIdList.size()==0){
@@ -63,9 +60,8 @@ public class AiTestTaskController {
         testTask.setTestJenkinsId(tokenDto.getDefaultJenkinsId());
 
         //调用service
-        aiTestTaskService.save(taskDto,UserBaseStr.Task_Type_One);
+        return aiTestTaskService.save(taskDto,UserBaseStr.Task_Type_One);
 
-        return ResultDto.success("成功");
     }
 
 
