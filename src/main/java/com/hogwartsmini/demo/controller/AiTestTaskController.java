@@ -2,12 +2,15 @@ package com.hogwartsmini.demo.controller;
 
 import com.hogwartsmini.demo.common.TokenDb;
 import com.hogwartsmini.demo.common.UserBaseStr;
+import com.hogwartsmini.demo.dto.RequestInfoDto;
 import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.task.AddHogwartsTestTaskDto;
+import com.hogwartsmini.demo.dto.task.StartTestDto;
 import com.hogwartsmini.demo.dto.task.TestTaskDto;
 import com.hogwartsmini.demo.dto.testcase.AddHogwartsTestCaseDto;
 import com.hogwartsmini.demo.entity.HogwartsTestCase;
+import com.hogwartsmini.demo.entity.HogwartsTestTask;
 import com.hogwartsmini.demo.service.AiTestCaseService;
 import com.hogwartsmini.demo.service.AiTestTaskService;
 import io.swagger.annotations.Api;
@@ -63,7 +66,32 @@ public class AiTestTaskController {
         return aiTestTaskService.save(taskDto,UserBaseStr.Task_Type_One);
 
     }
+    @ApiOperation("执行测试任务接口")
+    @PostMapping("start")    // 表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
+    public ResultDto startTest(HttpServletRequest request
+            , @RequestBody StartTestDto startTaskDto) throws IOException, URISyntaxException {
+        //参数校验
+        if(Objects.isNull(startTaskDto)){
+            return ResultDto.fail("参数不能为空");
+        }
+        if(Objects.isNull(startTaskDto.getTaskId())){
+            return ResultDto.fail("任务id不能为空");
+        }
+       //用于存储后端服务baseUrl、token等数据
+        RequestInfoDto requestInfoDto=new RequestInfoDto();
+        HogwartsTestTask hogwartsTestTask=new HogwartsTestTask();
+        //获取当前登录用户信息
+        TokenDto tokenDto=tokenDb.getUserInfo(request.getHeader(UserBaseStr.LOGIN_TOKEN));
+        hogwartsTestTask.setCreateUserId(tokenDto.getUserId());
+        hogwartsTestTask.setTestJenkinsId(tokenDto.getDefaultJenkinsId());
+        hogwartsTestTask.setId(startTaskDto.getTaskId());
+        hogwartsTestTask.setTestCommand(startTaskDto.getTestCommand());
 
+
+        //调用service
+        return aiTestTaskService.startTask(tokenDto,requestInfoDto,requestInfoDto);
+
+    }
 
 
 }

@@ -1,5 +1,7 @@
 package com.hogwartsmini.demo.common;
 
+
+import com.hogwartsmini.demo.config.Intercepors.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +18,7 @@ import java.util.List;
 public class WebMvcConfig extends WebMvcConfigurationSupport {
     //将自定义的拦截器，注入到类里
     @Autowired
-    private DemoInterceptor demoInterceptor;
+    private LoginInterceptor demoInterceptor;
 
     //重写父类方法，定义匹配路径的拦截器， 如果下面是/**,就是所有路径都要走此拦截
     @Override

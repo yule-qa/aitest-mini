@@ -1,5 +1,8 @@
-package com.hogwartsmini.demo.common;
+package com.hogwartsmini.demo.config.Intercepors;
 
+import com.hogwartsmini.demo.common.ServiceException;
+import com.hogwartsmini.demo.common.TokenDb;
+import com.hogwartsmini.demo.common.UserBaseStr;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,7 @@ import java.util.Objects;
  */
 @Component
 @Slf4j
-public class DemoInterceptor implements HandlerInterceptor {
+public class LoginInterceptor implements HandlerInterceptor {
     @Autowired //这个单词的意思是自动装配，就是把spring容器中这个类装配到当前类里
     private TokenDb tokenDb;
 
@@ -32,7 +35,17 @@ public class DemoInterceptor implements HandlerInterceptor {
         log.info("===request.getRequestUri()==="+requestUri);
         //下方对接口拦截判断是否传入token，但是有些接口不需要判断，所以在下面过滤掉,放行
         boolean passFlag=false;
-        if(requestUri.contains("/user/login") || requestUri.contains("/user/register")){
+        if(requestUri.contains("/user/login")
+                || requestUri.contains("/user/register")
+                ||requestUri.contains("swagger")
+                //过滤spring默认错误页面
+                || requestUri.equals("/error")
+                //过滤csrf
+                || requestUri.equals("/csrf")
+                //过滤http://127.0.0.1:8093/v2/api-docs
+                || requestUri.equals("/favicon.ico")//演示map local 不用校验是否登录
+                || requestUri.equals("/report/showMapLocal")
+                || requestUri.equals("/")){
             passFlag=true;
         }
         if(passFlag){

@@ -58,10 +58,11 @@ public class AiTestJenkinsController {
     }
 
     @ApiOperation("jenkins分页接口")
-    @GetMapping()    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
+    @GetMapping("list")    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
     public ResultDto<PageTableResponse<HogwartsTestJenkins>> list(HttpServletRequest request,
                                                                   PageTableRequest<QueryHogwartsTestJenkinsListDto> pageTableRequest)  {
         //从客户端请求的header中获取token，并根据token获取用户信息
+
         TokenDto tokenDto=tokenDb.getUserInfo(request.getHeader(UserBaseStr.LOGIN_TOKEN));
         //获取分页请求中的查询参数对象
         //讲当前用户id作为查询条件，防止用户数据混乱
@@ -70,8 +71,11 @@ public class AiTestJenkinsController {
             pageTableRequest.setParams(new QueryHogwartsTestJenkinsListDto());
         }
         pageTableRequest.getParams().setCreateUserId(tokenDto.getUserId());
+
+//        pageTableRequest.setPageNum(Integer.valueOf(pageNum) );
         log.info("向service传递的请求参数"+JSONObject.toJSONString(pageTableRequest));
         return aiTestJenkinsService.list(pageTableRequest);
     }
+
 
 }
