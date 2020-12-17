@@ -182,7 +182,10 @@ public class AiTestTaskServiceImpl implements AiTestTaskService {
                 .append(commandRunCaseSuffix);
         testCommand.append(" ");
         testCommand.append("${aitestBaseUrl}")
-                .append("/testCase/data").append(hogwartsTestCase.getId());
+                .append("/testCase/data/").append(hogwartsTestCase.getId());
+        testCommand.append("  ");
+        testCommand.append("-H \"token: ${token}\"");
+        testCommand.append(" || true");
     }
 
 
