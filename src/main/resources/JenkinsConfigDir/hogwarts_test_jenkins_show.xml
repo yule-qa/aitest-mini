@@ -33,9 +33,15 @@
     <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
     <triggers/>
     <concurrentBuild>false</concurrentBuild>
+
     <builders>
         <hudson.tasks.Shell>
-            <command>eval "${testCommand}"</command> <!-- eval 是将字符串变成可执行的命令，然后再去执行命令>
+            <command>
+                pwd
+                set -x . ~/.bash_profile <!-- 设置jenkins使用自己电脑的环境，这样减少配置环境变量-->
+                eval "${testCommand}"
+                eval "${updateStatusData}"
+            </command> <!-- eval 是将字符串变成可执行的命令，然后再去执行命令 -->
             <configuredLocalRules/>
         </hudson.tasks.Shell>
     </builders>

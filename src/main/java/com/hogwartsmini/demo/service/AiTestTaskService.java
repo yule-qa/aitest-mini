@@ -1,6 +1,7 @@
 package com.hogwartsmini.demo.service;
 
 import com.hogwartsmini.demo.common.PageTableResponse;
+import com.hogwartsmini.demo.dto.RequestInfoDto;
 import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.task.TestTaskDto;
@@ -55,7 +56,7 @@ public interface AiTestTaskService {
      * @param hogwartsTestTask
      * @return
      */
-//    ResultDto startTask(TokenDto tokenDto, RequestInfoDto requestInfoDto, HogwartsTestTask hogwartsTestTask) throws IOException;
+    ResultDto startTask(TokenDto tokenDto, RequestInfoDto requestInfoDto, HogwartsTestTask hogwartsTestTask) throws IOException, URISyntaxException;
 
     /**
      *  修改测试任务状态信息

@@ -1,7 +1,9 @@
 package com.hogwartsmini.demo.dto;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
+@Data
 public class RequestInfoDto {
     //请求的接口地址
     @ApiModelProperty(value="请求的接口地址，用于拼装命令",hidden = true)

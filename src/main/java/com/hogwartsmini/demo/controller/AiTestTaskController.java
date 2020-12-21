@@ -1,5 +1,6 @@
 package com.hogwartsmini.demo.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hogwartsmini.demo.common.TokenDb;
 import com.hogwartsmini.demo.common.UserBaseStr;
 import com.hogwartsmini.demo.dto.RequestInfoDto;
@@ -13,6 +14,7 @@ import com.hogwartsmini.demo.entity.HogwartsTestCase;
 import com.hogwartsmini.demo.entity.HogwartsTestTask;
 import com.hogwartsmini.demo.service.AiTestCaseService;
 import com.hogwartsmini.demo.service.AiTestTaskService;
+import com.hogwartsmini.demo.util.StrUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -74,11 +76,9 @@ public class AiTestTaskController {
         if(Objects.isNull(startTaskDto)){
             return ResultDto.fail("参数不能为空");
         }
-        if(Objects.isNull(startTaskDto.getTaskId())){
+        if(Objects.isNull(startTaskDto.getTaskId())) {
             return ResultDto.fail("任务id不能为空");
         }
-       //用于存储后端服务baseUrl、token等数据
-        RequestInfoDto requestInfoDto=new RequestInfoDto();
         HogwartsTestTask hogwartsTestTask=new HogwartsTestTask();
         //获取当前登录用户信息
         TokenDto tokenDto=tokenDb.getUserInfo(request.getHeader(UserBaseStr.LOGIN_TOKEN));
@@ -87,9 +87,21 @@ public class AiTestTaskController {
         hogwartsTestTask.setId(startTaskDto.getTaskId());
         hogwartsTestTask.setTestCommand(startTaskDto.getTestCommand());
 
+        //获取下方请求url
+        String url=request.getRequestURL().toString();
+        log.info("请求地址==="+url);
+        url= StrUtils.getHostAndPort(request.getRequestURL().toString());
+
+        //用于存储后端服务baseUrl、token等数据
+        RequestInfoDto requestInfoDto=new RequestInfoDto();
+        requestInfoDto.setBaseUrl(url);
+        requestInfoDto.setRequestUrl(url);
+        requestInfoDto.setToken(tokenDto.getToken());
+
+        log.info("requestInfoDto=="+ JSONObject.toJSONString(requestInfoDto));
 
         //调用service
-        return aiTestTaskService.startTask(tokenDto,requestInfoDto,requestInfoDto);
+        return aiTestTaskService.startTask(tokenDto,requestInfoDto,hogwartsTestTask);
 
     }
 
