@@ -6,6 +6,7 @@ import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.jenkins.AddHogwartsTestJenkinsDto;
 import com.hogwartsmini.demo.dto.jenkins.QueryHogwartsTestJenkinsListDto;
+import com.hogwartsmini.demo.dto.jenkins.UpdateHogwartsTestJenkinsDto;
 import com.hogwartsmini.demo.entity.HogwartsTestJenkins;
 
 import java.io.IOException;
@@ -20,6 +21,13 @@ public interface AiTestJenkinsService {
      */
     public ResultDto<HogwartsTestJenkins> save(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins, AddHogwartsTestJenkinsDto addHogwartsTestJenkinsDto) throws IOException, URISyntaxException;
     /**
+     * 编辑jenkins
+     * @param hogwartsTestJenkins
+     * @return
+     */
+    public ResultDto<HogwartsTestJenkins> update(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins, UpdateHogwartsTestJenkinsDto updateHogwartsTestJenkinsDto) throws IOException, URISyntaxException;
+
+    /**update
      * 分页查询Jenkins列表
      * @param pageTableRequest
      * @return

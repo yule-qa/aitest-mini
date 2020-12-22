@@ -8,6 +8,7 @@ import com.hogwartsmini.demo.common.UserBaseStr;
 import com.hogwartsmini.demo.dto.*;
 import com.hogwartsmini.demo.dto.jenkins.AddHogwartsTestJenkinsDto;
 import com.hogwartsmini.demo.dto.jenkins.QueryHogwartsTestJenkinsListDto;
+import com.hogwartsmini.demo.dto.jenkins.UpdateHogwartsTestJenkinsDto;
 import com.hogwartsmini.demo.entity.HogwartsTestJenkins;
 import com.hogwartsmini.demo.service.AiTestJenkinsService;
 import io.swagger.annotations.Api;
@@ -56,6 +57,28 @@ public class AiTestJenkinsController {
         log.info("添加jenkins job的参数为"+ JSONObject.toJSONString(hogwartsTestJenkins));
         return  aiTestJenkinsService.save(tokenDto,hogwartsTestJenkins,addHogwartsTestJenkinsDto);
     }
+
+    @ApiOperation("修改jenkins接口")
+    @PutMapping()    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
+    public ResultDto<HogwartsTestJenkins> update(HttpServletRequest request,  @RequestBody UpdateHogwartsTestJenkinsDto updateHogwartsTestJenkinsDto) throws IOException, URISyntaxException {
+        HogwartsTestJenkins hogwartsTestJenkins=new HogwartsTestJenkins();
+        //校验Jenkins url 是否为空
+        if(StringUtils.isEmpty(updateHogwartsTestJenkinsDto.getUrl())){
+            return ResultDto.fail("jenkins url不可为空");
+        }
+        //通过请求，获取token值
+        String tokenStr=request.getHeader(UserBaseStr.LOGIN_TOKEN);
+        //通过tokenDB（是个map，结构{token:tokenDto}） 查询到token值对应的tokenDto
+        TokenDto tokenDto =tokenDb.getUserInfo(tokenStr);
+
+        //将addHogwartsTestJenkinsDto属性，拷贝到hogwartsTestJenkins类里，有个条件，前后两个类中属性名字必须一致
+        BeanUtils.copyProperties(updateHogwartsTestJenkinsDto,hogwartsTestJenkins);
+        //通过Dto里查询到用户信息
+        hogwartsTestJenkins.setCreateUserId(tokenDto.getUserId());
+        log.info("添加jenkins job的参数为"+ JSONObject.toJSONString(hogwartsTestJenkins));
+        return  aiTestJenkinsService.update(tokenDto,hogwartsTestJenkins,updateHogwartsTestJenkinsDto);
+    }
+
 
     @ApiOperation("jenkins分页接口")
     @GetMapping("list")    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）

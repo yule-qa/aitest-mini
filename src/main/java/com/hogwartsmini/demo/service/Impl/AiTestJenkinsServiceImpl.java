@@ -9,6 +9,7 @@ import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.jenkins.AddHogwartsTestJenkinsDto;
 import com.hogwartsmini.demo.dto.jenkins.QueryHogwartsTestJenkinsListDto;
+import com.hogwartsmini.demo.dto.jenkins.UpdateHogwartsTestJenkinsDto;
 import com.hogwartsmini.demo.entity.HogwartsTestJenkins;
 import com.hogwartsmini.demo.service.AiTestJenkinsService;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +62,29 @@ public class AiTestJenkinsServiceImpl implements AiTestJenkinsService {
         return ResultDto.success("成功",hogwartsTestJenkins);
     }
 
+    @Override
+    public ResultDto<HogwartsTestJenkins> update(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins, UpdateHogwartsTestJenkinsDto updateHogwartsTestJenkinsDto) throws IOException, URISyntaxException {
+        //设置创建时间和更新时间
+        hogwartsTestJenkins.setCreateTime(new Date());
+        hogwartsTestJenkins.setUpdateTime(new Date());
+//        JenkinsUtil.save(hogwartsTestJenkins);
+        //todo 到这里要继续搞
+        hogwartsTestJenkinsMapper.insertUseGeneratedKeys(hogwartsTestJenkins);
+        //如果是否为默i认Jenkins的标志位为1，则修改hogwarts_test_ user 中的default_ jenkins_ id字段
+
+        Integer jenkinsId=hogwartsTestJenkins.getId();
+        if(Objects.nonNull(updateHogwartsTestJenkinsDto.getDefaultJenkinsFlag()) && updateHogwartsTestJenkinsDto.getDefaultJenkinsFlag()==1){
+            log.info("查询用户信息jenkinsId："+jenkinsId+"用户id"+hogwartsTestJenkins.getCreateUserId());
+            //将新增的JenkinsId放入其中，并根据用户id更新hogwarts_ test_ user,
+            //更新token信息中的默认JenkinsId
+            tokenDto.setDefaultJenkinsId(hogwartsTestJenkins.getId());
+            tokenDb.addTokenDto(tokenDto.getToken(), tokenDto);
+            hogwartsTestUserMapper.updateUserDefaultJenkinsId(jenkinsId,hogwartsTestJenkins.getCreateUserId());
+        }
+
+//        String defaultenkinsId=hogwartsTestJenkins.get
+        return ResultDto.success("成功",hogwartsTestJenkins);
+    }
 
 
     /**
