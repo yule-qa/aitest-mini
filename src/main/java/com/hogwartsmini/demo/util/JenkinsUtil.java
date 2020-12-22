@@ -38,13 +38,13 @@ public class JenkinsUtil {
         ClassPathResource classPathResource =new ClassPathResource("JenkinsConfigDir/hogwarts_start_jenkins_show.xml");
         InputStream inputStream=classPathResource.getInputStream();
         String jobConfiXml=FileUtil.getText(inputStream);
-        //增加非空等校验
+        //todo 增加非空等校验
         String baseUrl=hogwartsTestJenkins.getUrl();
         String userName=hogwartsTestJenkins.getUserName();
         String password=hogwartsTestJenkins.getPassword();
-        //如果此次，jenkins并没有提供用户名密码，而是提供授权的方式，可以通过token当密码，进行唤起jenkins client
+        //如果当遇见，jenkins并没有提供用户名密码，而是提供授权的方式，可以通过token当密码，进行唤起jenkins client
 
-        //获取jenkins版本号
+        //获取jenkins客户端对象，并获取版本号
         JenkinsHttpClient jenkinsHttpClient=new JenkinsHttpClient(new URI(baseUrl),userName,password);
         String jenkinsVersion=jenkinsHttpClient.getJenkinsVersion();
         System.out.println("jenkins的版本号"+jenkinsVersion);
@@ -56,14 +56,15 @@ public class JenkinsUtil {
             jenkinsServer.createJob(jobName,jobConfiXml,true);
             hogwartsTestUser.setStartTestJobName(jobName);
         }else{
-            jenkinsServer.updateJob(jobName,jobConfiXml,true);
+                jenkinsServer.updateJob(jobName,jobConfiXml,true);
         }
 
         Map<String, Job> jobMap=jenkinsServer.getJobs();
-
-        Job job=jobMap.get(jobMap);
-
+        //根据job名称获取Jenkins上的job信息
+        Job job=jobMap.get(jobName);
+        //为构建参数赋值
         Map<String, String> map=params;
+        //开始有参构建
         job.build(map,true);
 
         return ResultDto.success("成功",hogwartsTestUser);

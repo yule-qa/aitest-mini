@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.security.sasl.SaslException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -209,6 +210,7 @@ public class AiTestTaskServiceImpl implements AiTestTaskService {
 //    }
 //
 
+    @Transactional(rollbackFor = Exception.class) //阻断事务，当抛异常时，主动停止执行并且回滚
     @Override
     public ResultDto startTask(TokenDto tokenDto, RequestInfoDto requestInfoDto, HogwartsTestTask hogwartsTestTask) throws IOException, URISyntaxException {
         //参数校验和默认Jenkins是否有效
@@ -260,7 +262,21 @@ public class AiTestTaskServiceImpl implements AiTestTaskService {
         operateJenkinsJobDto.setHogwartsTestJenkins(requestHogwartsTestJenkins);
         operateJenkinsJobDto.setParams(map);
         operateJenkinsJobDto.setHogwartsTestUser(resultHogwartsTestUser);
+        //真正去调用过的jenkins api，创建了job，但是此时，还没有入库
         ResultDto<HogwartsTestUser> resultDto=JenkinsUtil.build(operateJenkinsJobDto);
+        //判断一下如果返回的是0，就证明创建失败，需要回滚事务，阻断下方继续执行 ,
+        // todo 这里在jentinsUtil里需要增加回滚方法，就是删掉刚创建的job
+        if(0==resultDto.getResultCode()){
+            throw  new SaslException(resultDto.getMessage());
+
+        }
+        //更新用户信息，主要是为了更新startTestJobName
+        HogwartsTestUser hogwartsTestUser=resultDto.getData();
+        queryHogwartsTestUser= hogwartsTestUserMapper.selectOne(queryHogwartsTestUser);
+        if(StringUtils.isEmpty(queryHogwartsTestUser.getStartTestJobName())){
+            //更新入库
+            hogwartsTestUserMapper.updateByPrimaryKeySelective(hogwartsTestUser); //判断StartTestJobNam为空才更新会提高性能
+        }
 
         return ResultDto.success("成功", resultHogwartsTestTask);
     }
