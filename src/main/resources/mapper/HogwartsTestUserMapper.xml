@@ -25,7 +25,7 @@
   </update>
   <update id="updateUserDefaultJenkinsId">
         update hogwarts_test_user set
-                default_jenkins_id=#{defaultJenkinsId}
+                default_jenkins_id=#{defaultJenkinsId} , update_time=SYSDATE()
         where id=#{userId}
   </update>
 

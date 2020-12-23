@@ -40,7 +40,7 @@ public class AiTestJenkinsServiceImpl implements AiTestJenkinsService {
      * @return
      */
     @Override
-    public ResultDto<HogwartsTestJenkins> save(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins, AddHogwartsTestJenkinsDto addHogwartsTestJenkinsDto) throws IOException, URISyntaxException {
+    public ResultDto<HogwartsTestJenkins> save(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins) throws IOException, URISyntaxException {
         //设置创建时间和更新时间
         hogwartsTestJenkins.setCreateTime(new Date());
         hogwartsTestJenkins.setUpdateTime(new Date());
@@ -49,7 +49,7 @@ public class AiTestJenkinsServiceImpl implements AiTestJenkinsService {
         //如果是否为默i认Jenkins的标志位为1，则修改hogwarts_test_ user 中的default_ jenkins_ id字段
 
         Integer jenkinsId=hogwartsTestJenkins.getId();
-        if(Objects.nonNull(addHogwartsTestJenkinsDto.getDefaultJenkinsFlag()) && addHogwartsTestJenkinsDto.getDefaultJenkinsFlag()==1){
+        if(Objects.nonNull(hogwartsTestJenkins.getDefaultJenkinsFlag()) && hogwartsTestJenkins.getDefaultJenkinsFlag()==1){
             log.info("查询用户信息jenkinsId："+jenkinsId+"用户id"+hogwartsTestJenkins.getCreateUserId());
             //将新增的JenkinsId放入其中，并根据用户id更新hogwarts_ test_ user,
             //更新token信息中的默认JenkinsId
@@ -63,17 +63,16 @@ public class AiTestJenkinsServiceImpl implements AiTestJenkinsService {
     }
 
     @Override
-    public ResultDto<HogwartsTestJenkins> update(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins, UpdateHogwartsTestJenkinsDto updateHogwartsTestJenkinsDto) throws IOException, URISyntaxException {
+    public ResultDto<HogwartsTestJenkins> update(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins) throws IOException, URISyntaxException {
         //设置创建时间和更新时间
-        hogwartsTestJenkins.setCreateTime(new Date());
         hogwartsTestJenkins.setUpdateTime(new Date());
 //        JenkinsUtil.save(hogwartsTestJenkins);
         //todo 到这里要继续搞
-        hogwartsTestJenkinsMapper.insertUseGeneratedKeys(hogwartsTestJenkins);
+        hogwartsTestJenkinsMapper.updateByPrimaryKeySelective(hogwartsTestJenkins);
         //如果是否为默i认Jenkins的标志位为1，则修改hogwarts_test_ user 中的default_ jenkins_ id字段
 
         Integer jenkinsId=hogwartsTestJenkins.getId();
-        if(Objects.nonNull(updateHogwartsTestJenkinsDto.getDefaultJenkinsFlag()) && updateHogwartsTestJenkinsDto.getDefaultJenkinsFlag()==1){
+        if(Objects.nonNull(hogwartsTestJenkins.getDefaultJenkinsFlag()) && hogwartsTestJenkins.getDefaultJenkinsFlag()==1){
             log.info("查询用户信息jenkinsId："+jenkinsId+"用户id"+hogwartsTestJenkins.getCreateUserId());
             //将新增的JenkinsId放入其中，并根据用户id更新hogwarts_ test_ user,
             //更新token信息中的默认JenkinsId
@@ -83,6 +82,14 @@ public class AiTestJenkinsServiceImpl implements AiTestJenkinsService {
         }
 
 //        String defaultenkinsId=hogwartsTestJenkins.get
+        return ResultDto.success("成功",hogwartsTestJenkins);
+    }
+
+    //删除jenkins
+    @Override
+    public ResultDto<HogwartsTestJenkins> delete(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins) throws IOException, URISyntaxException {
+        log.info("要删除的jenkinsid为"+hogwartsTestJenkins.getId());
+        hogwartsTestJenkinsMapper.deleteByPrimaryKey(hogwartsTestJenkins);
         return ResultDto.success("成功",hogwartsTestJenkins);
     }
 

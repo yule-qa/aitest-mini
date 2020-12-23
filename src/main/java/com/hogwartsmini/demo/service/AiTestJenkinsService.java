@@ -19,20 +19,28 @@ public interface AiTestJenkinsService {
      * @param hogwartsTestJenkins
      * @return
      */
-    public ResultDto<HogwartsTestJenkins> save(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins, AddHogwartsTestJenkinsDto addHogwartsTestJenkinsDto) throws IOException, URISyntaxException;
+    public ResultDto<HogwartsTestJenkins> save(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins) throws IOException, URISyntaxException;
     /**
      * 编辑jenkins
      * @param hogwartsTestJenkins
      * @return
      */
-    public ResultDto<HogwartsTestJenkins> update(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins, UpdateHogwartsTestJenkinsDto updateHogwartsTestJenkinsDto) throws IOException, URISyntaxException;
+    public ResultDto<HogwartsTestJenkins> update(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins) throws IOException, URISyntaxException;
 
-    /**update
+    /**
+     * 删除jenkins
+     * @param tokenDto
+     * @param hogwartsTestJenkins
+     * @return
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    public ResultDto<HogwartsTestJenkins> delete(TokenDto tokenDto, HogwartsTestJenkins hogwartsTestJenkins) throws IOException, URISyntaxException;
+
+    /**
      * 分页查询Jenkins列表
      * @param pageTableRequest
      * @return
      */
-
-
     public ResultDto<PageTableResponse<HogwartsTestJenkins>> list(PageTableRequest<QueryHogwartsTestJenkinsListDto> pageTableRequest);
 }

@@ -55,7 +55,7 @@ public class AiTestJenkinsController {
         //通过Dto里查询到用户信息
         hogwartsTestJenkins.setCreateUserId(tokenDto.getUserId());
         log.info("添加jenkins job的参数为"+ JSONObject.toJSONString(hogwartsTestJenkins));
-        return  aiTestJenkinsService.save(tokenDto,hogwartsTestJenkins,addHogwartsTestJenkinsDto);
+        return  aiTestJenkinsService.save(tokenDto,hogwartsTestJenkins);
     }
 
     @ApiOperation("修改jenkins接口")
@@ -76,7 +76,28 @@ public class AiTestJenkinsController {
         //通过Dto里查询到用户信息
         hogwartsTestJenkins.setCreateUserId(tokenDto.getUserId());
         log.info("添加jenkins job的参数为"+ JSONObject.toJSONString(hogwartsTestJenkins));
-        return  aiTestJenkinsService.update(tokenDto,hogwartsTestJenkins,updateHogwartsTestJenkinsDto);
+        return  aiTestJenkinsService.update(tokenDto,hogwartsTestJenkins);
+    }
+
+    @ApiOperation("删除jenkins接口")
+    @DeleteMapping("{jenkinsId}")
+    public ResultDto<HogwartsTestJenkins> delete(HttpServletRequest request,@PathVariable("jenkinsId") Integer jenkinsId) throws IOException, URISyntaxException {
+        HogwartsTestJenkins hogwartsTestJenkins=new HogwartsTestJenkins();
+        //校验Jenkins id 是否为空
+        if(null == jenkinsId){
+            return ResultDto.fail("jenkinsid不可为空");
+        }
+        //通过请求，获取token值
+        String tokenStr=request.getHeader(UserBaseStr.LOGIN_TOKEN);
+        //通过tokenDB（是个map，结构{token:tokenDto}） 查询到token值对应的tokenDto
+        TokenDto tokenDto =tokenDb.getUserInfo(tokenStr);
+        //通过Dto里查询到用户信息
+        hogwartsTestJenkins.setCreateUserId(tokenDto.getUserId());
+
+        //创建要查询的对象，为后续操作数据库做准备
+        hogwartsTestJenkins.setId(jenkinsId);
+        log.info("准备删除job"+ JSONObject.toJSONString(hogwartsTestJenkins));
+        return  aiTestJenkinsService.delete(tokenDto,hogwartsTestJenkins);
     }
 
 
