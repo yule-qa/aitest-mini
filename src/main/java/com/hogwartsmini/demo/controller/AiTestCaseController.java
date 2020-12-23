@@ -1,5 +1,6 @@
 package com.hogwartsmini.demo.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hogwartsmini.demo.common.TokenDb;
 import com.hogwartsmini.demo.common.UserBaseStr;
 import com.hogwartsmini.demo.dto.ResultDto;
@@ -8,9 +9,12 @@ import com.hogwartsmini.demo.dto.testcase.AddHogwartsTestCaseDto;
 import com.hogwartsmini.demo.entity.HogwartsTestCase;
 import com.hogwartsmini.demo.service.AiTestCaseService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,6 +38,25 @@ public class AiTestCaseController {
     @Autowired
     private TokenDb tokenDb;
 
+    @ApiOperation("新增文本类型测试用例接口")
+    @PostMapping("text")
+    public ResultDto saveText(HttpServletRequest request,@RequestBody AddHogwartsTestCaseDto addHogwartsTestCaseDto){
+        log.info("=====新增文本测试用例-请求入参====："+ JSONObject.toJSONString(addHogwartsTestCaseDto));
+        if(Objects.isNull(addHogwartsTestCaseDto)){
+            return ResultDto.fail("请求参数不能为空");
+        }
+        if(StringUtils.isEmpty(addHogwartsTestCaseDto.getCaseData())){
+            return ResultDto.fail("测试用例数据不能为空");
+        }
+        if(StringUtils.isEmpty(addHogwartsTestCaseDto.getCaseName())){
+            return ResultDto.fail("测试用例名称不能为空");
+        }
+        HogwartsTestCase hogwartsTestCase=new HogwartsTestCase();
+        BeanUtils.copyProperties(addHogwartsTestCaseDto,hogwartsTestCase);
+        TokenDto  tokenDto=tokenDb.getUserInfo(request.getHeader(UserBaseStr.LOGIN_TOKEN));
+        hogwartsTestCase.setCreateUserId(tokenDto.getUserId());
+        return aiTestCaseService.saveText(tokenDto,hogwartsTestCase);
+    }
 
     @ApiOperation("新增文件类型测试用例接口")
     //@RequestMapping(value ="login",method = RequestMethod.POST)
