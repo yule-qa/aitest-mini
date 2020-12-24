@@ -3,6 +3,7 @@ package com.hogwartsmini.demo.service.Impl;
 import com.hogwartsmini.demo.common.PageTableRequest;
 import com.hogwartsmini.demo.common.PageTableResponse;
 import com.hogwartsmini.demo.common.TokenDb;
+import com.hogwartsmini.demo.common.UserBaseStr;
 import com.hogwartsmini.demo.dao.HogwartsTestCaseMapper;
 import com.hogwartsmini.demo.dao.HogwartsTestUserMapper;
 import com.hogwartsmini.demo.dto.ResultDto;
@@ -30,8 +31,7 @@ public class AiTestCaseServiceImpl implements AiTestCaseService {
 
     @Autowired
     private HogwartsTestCaseMapper hogwartsTestCaseMapper;
-    @Autowired
-    private HogwartsTestUserMapper hogwartsTestUserMapper;
+
     @Autowired
     private TokenDb tokenDb;
 
@@ -41,8 +41,11 @@ public class AiTestCaseServiceImpl implements AiTestCaseService {
      * @return
      */
     @Override
-    public ResultDto saveFile(TokenDto tokenDto, HogwartsTestCase hogwartsTestCase) throws IOException, URISyntaxException {
-        //todo
+    public ResultDto<HogwartsTestCase> save(TokenDto tokenDto, HogwartsTestCase hogwartsTestCase) throws IOException, URISyntaxException {
+        hogwartsTestCase.setCreateTime(new Date());
+        hogwartsTestCase.setUpdateTime(new Date());
+        hogwartsTestCase.setDelFlag(UserBaseStr.DEL_FLAG_ONE);
+        hogwartsTestCaseMapper.insertUseGeneratedKeys(hogwartsTestCase);
         return ResultDto.success("成功",hogwartsTestCase);
     }
 

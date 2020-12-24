@@ -20,4 +20,8 @@ public class UserBaseStr {
     public static final Integer CASE_TYPE_ONE=1;
     //测试用例类型 2 文件类型
     public static final Integer CASE_TYPE_TWO=2;
+    //测试用例数据库数据状态 1 未删除
+    public final static Integer DEL_FLAG_ONE = 1;
+    //测试用例数据库数据桩体 2 已删除
+    public final static Integer DEL_FLAG_ZERO = 0;
 }

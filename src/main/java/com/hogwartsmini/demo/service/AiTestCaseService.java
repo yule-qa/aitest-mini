@@ -19,7 +19,8 @@ public interface AiTestCaseService {
      * @param hogwartsTestCase
      * @return
      */
-    public ResultDto saveFile(TokenDto tokenDto, HogwartsTestCase hogwartsTestCase) throws IOException, URISyntaxException;
+    public ResultDto save(TokenDto tokenDto, HogwartsTestCase hogwartsTestCase) throws IOException, URISyntaxException;
 
+//    public ResultDto saveText(TokenDto tokenDto, HogwartsTestCase hogwartsTestCase) throws IOException, URISyntaxException;
 
 }
