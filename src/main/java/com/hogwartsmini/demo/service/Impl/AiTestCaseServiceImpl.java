@@ -10,6 +10,7 @@ import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.jenkins.AddHogwartsTestJenkinsDto;
 import com.hogwartsmini.demo.dto.jenkins.QueryHogwartsTestJenkinsListDto;
+import com.hogwartsmini.demo.dto.testcase.QueryHogwartsTestCaseListDto;
 import com.hogwartsmini.demo.entity.HogwartsTestCase;
 import com.hogwartsmini.demo.entity.HogwartsTestJenkins;
 import com.hogwartsmini.demo.service.AiTestCaseService;
@@ -49,7 +50,10 @@ public class AiTestCaseServiceImpl implements AiTestCaseService {
         return ResultDto.success("成功",hogwartsTestCase);
     }
 
-
+    @Override
+    public ResultDto list(PageTableRequest<QueryHogwartsTestCaseListDto> pageTableRequest) {
+        return null;
+    }
 
 
 }

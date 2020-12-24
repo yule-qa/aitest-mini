@@ -6,6 +6,7 @@ import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.jenkins.AddHogwartsTestJenkinsDto;
 import com.hogwartsmini.demo.dto.jenkins.QueryHogwartsTestJenkinsListDto;
+import com.hogwartsmini.demo.dto.testcase.QueryHogwartsTestCaseListDto;
 import com.hogwartsmini.demo.entity.HogwartsTestCase;
 import com.hogwartsmini.demo.entity.HogwartsTestJenkins;
 
@@ -20,6 +21,7 @@ public interface AiTestCaseService {
      * @return
      */
     public ResultDto save(TokenDto tokenDto, HogwartsTestCase hogwartsTestCase) throws IOException, URISyntaxException;
+    public ResultDto list(PageTableRequest<QueryHogwartsTestCaseListDto> pageTableRequest);
 
 //    public ResultDto saveText(TokenDto tokenDto, HogwartsTestCase hogwartsTestCase) throws IOException, URISyntaxException;
 
