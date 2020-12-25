@@ -18,4 +18,10 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="test_command" jdbcType="LONGVARCHAR" property="testCommand" />
   </resultMap>
+  <select id="list" resultType="HogwartsTestTask">
+      SELECT * FROM hogwarts_test_task htt WHERE htt.create_user_id =#{params.createUserId}
+      <if test="params.name !=null and params.name !=''">
+        and htt.name = #{params.name}
+      </if>
+    </select>
 </mapper>

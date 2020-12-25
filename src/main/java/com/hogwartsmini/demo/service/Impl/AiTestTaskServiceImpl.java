@@ -1,7 +1,7 @@
 package com.hogwartsmini.demo.service.Impl;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.hogwartsmini.demo.common.PageTableResponse;
 import com.hogwartsmini.demo.common.ServiceException;
 import com.hogwartsmini.demo.common.TokenDb;
 import com.hogwartsmini.demo.common.UserBaseStr;
@@ -11,6 +11,7 @@ import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.jenkins.OperateJenkinsJobDto;
 import com.hogwartsmini.demo.dto.task.AddHogwartsTestTaskDto;
+import com.hogwartsmini.demo.dto.task.QueryHogwartsTestTaskListDto;
 import com.hogwartsmini.demo.dto.task.TestTaskDto;
 import com.hogwartsmini.demo.entity.*;
 import com.hogwartsmini.demo.service.AiTestTaskService;
@@ -202,6 +203,18 @@ public class AiTestTaskServiceImpl implements AiTestTaskService {
     @Override
     public ResultDto<HogwartsTestTask> getById(Integer taskId, Integer createUserId) {
         return null;
+    }
+
+    @Override
+    public ResultDto<PageTableResponse<HogwartsTestTask>> list(HogwartsTestTask hogwartsTestTask) {
+//        QueryHogwartsTestTaskListDto queryHogwartsTestTaskListDto=new QueryHogwartsTestTaskListDto();
+//        queryHogwartsTestTaskListDto.setCreateUserId(hogwartsTestTask.getCreateUserId());
+        List<HogwartsTestTask> list=hogwartsTestTaskMapper.list(hogwartsTestTask);
+        Integer count=hogwartsTestTaskMapper.selectCount(hogwartsTestTask);
+        PageTableResponse pageTableResponse=new PageTableResponse();
+        pageTableResponse.setData(list);
+        pageTableResponse.setRecordsTotal(count);
+        return ResultDto.success("成功",pageTableResponse);
     }
 
 //    @Override

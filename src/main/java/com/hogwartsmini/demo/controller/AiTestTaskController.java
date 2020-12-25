@@ -1,6 +1,7 @@
 package com.hogwartsmini.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hogwartsmini.demo.common.PageTableResponse;
 import com.hogwartsmini.demo.common.TokenDb;
 import com.hogwartsmini.demo.common.UserBaseStr;
 import com.hogwartsmini.demo.dto.RequestInfoDto;
@@ -9,25 +10,21 @@ import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.task.AddHogwartsTestTaskDto;
 import com.hogwartsmini.demo.dto.task.StartTestDto;
 import com.hogwartsmini.demo.dto.task.TestTaskDto;
-import com.hogwartsmini.demo.dto.testcase.AddHogwartsTestCaseDto;
-import com.hogwartsmini.demo.entity.HogwartsTestCase;
 import com.hogwartsmini.demo.entity.HogwartsTestTask;
-import com.hogwartsmini.demo.service.AiTestCaseService;
 import com.hogwartsmini.demo.service.AiTestTaskService;
 import com.hogwartsmini.demo.util.StrUtils;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.BeanUtils;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
@@ -60,7 +57,9 @@ public class AiTestTaskController {
             testTask =new AddHogwartsTestTaskDto();
             taskDto.setTestTask(testTask);
         }
-        testTask.setName("系统默认");
+        if(StringUtils.isEmpty(testTask.getName())) {
+            testTask.setName("系统默认");
+        }
         testTask.setCreateUserId(tokenDto.getUserId());
         testTask.setTestJenkinsId(tokenDto.getDefaultJenkinsId());
 
@@ -103,6 +102,17 @@ public class AiTestTaskController {
         //调用service
         return aiTestTaskService.startTask(tokenDto,requestInfoDto,hogwartsTestTask);
 
+    }
+
+    @ApiOperation("list接口")
+    @GetMapping("list")    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
+    public ResultDto<PageTableResponse<HogwartsTestTask>> list(HttpServletRequest request)  {
+        HogwartsTestTask hogwartsTestTask=new HogwartsTestTask();
+        //从客户端请求的header中获取token，并根据token获取用户信息
+        TokenDto tokenDto=tokenDb.getUserInfo(request.getHeader(UserBaseStr.LOGIN_TOKEN));
+        hogwartsTestTask.setCreateUserId(tokenDto.getUserId());
+        log.info("向service传递的请求参数"+JSONObject.toJSONString(hogwartsTestTask));
+        return aiTestTaskService.list(hogwartsTestTask);
     }
 
 

@@ -46,10 +46,10 @@ public interface AiTestTaskService {
 
     /**
      *  查询测试任务信息列表
-     * @param pageTableRequest
+     * @param hogwartsTestTask
      * @return
      */
-//    ResultDto<PageTableResponse<HogwartsTestTask>> list(PageTableRequest<QueryHogwartsTestTaskListDto> pageTableRequest);
+    ResultDto<PageTableResponse<HogwartsTestTask>> list(HogwartsTestTask hogwartsTestTask);
 
     /**
      *  开始执行测试任务信息
