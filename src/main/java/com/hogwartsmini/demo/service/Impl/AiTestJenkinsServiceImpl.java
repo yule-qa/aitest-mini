@@ -106,9 +106,9 @@ public class AiTestJenkinsServiceImpl implements AiTestJenkinsService {
         Integer pageNum=pageTableRequest.getPageNum();
         Integer pageSize=pageTableRequest.getPageSize();
         QueryHogwartsTestJenkinsListDto params=pageTableRequest.getParams();
-        log.info("准备查询数据库，查询params"+params);
-        log.info("准备查询数据库，PageNum"+pageNum);
-        log.info("准备查询数据库，pageSize"+pageSize);
+        log.info("Jenkins分页准备查询数据库，查询params"+params);
+        log.info("Jenkins分页准备查询数据库，PageNum"+pageNum);
+        log.info("Jenkins分页准备查询数据库，pageSize"+pageSize);
         List<HogwartsTestJenkins> list=hogwartsTestJenkinsMapper.list(params,(pageNum-1) * pageSize,pageSize);
         Integer count=hogwartsTestJenkinsMapper.count(params);
 

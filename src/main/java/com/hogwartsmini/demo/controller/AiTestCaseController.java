@@ -85,7 +85,7 @@ public class AiTestCaseController {
     }
 
     @ApiOperation("查询测试用例列表分页接口")
-    @PostMapping("list")    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
+    @GetMapping("list")    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
     public ResultDto<PageTableResponse<HogwartsTestCase>> list(HttpServletRequest request,
                                                                PageTableRequest<QueryHogwartsTestCaseListDto> pageTableRequest) throws IOException, URISyntaxException {
 
@@ -101,6 +101,16 @@ public class AiTestCaseController {
         log.info("向service传递的请求参数"+JSONObject.toJSONString(pageTableRequest));
         return aiTestCaseService.list(pageTableRequest);
     }
-
+    @ApiOperation("删除测试用例接口")
+    @DeleteMapping("{caseId}")    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
+    public ResultDto<HogwartsTestCase> delete(HttpServletRequest request,@PathVariable("caseId") Integer caseId) {
+        HogwartsTestCase hogwartsTestCase=new HogwartsTestCase();
+        //从客户端请求的header中获取token，并根据token获取用户信息
+        TokenDto tokenDto=tokenDb.getUserInfo(request.getHeader(UserBaseStr.LOGIN_TOKEN));
+        hogwartsTestCase.setId(caseId);
+        hogwartsTestCase.setCreateUserId(tokenDto.getUserId());
+        log.info("准备删除case"+ JSONObject.toJSONString(hogwartsTestCase));
+        return aiTestCaseService.delete(hogwartsTestCase);
+    }
 
 }

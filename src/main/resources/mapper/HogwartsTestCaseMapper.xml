@@ -14,4 +14,20 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="case_data" jdbcType="LONGVARCHAR" property="caseData" />
   </resultMap>
+   <!-- 统计总数 -->
+    <select id="count" resultType="int">
+      SELECT COUNT(1) FROM hogwarts_test_case htc WHERE htc.create_user_id =#{params.createUserId}
+      <if test="params.name !=null and params.name !=''">
+          and htx.case_name = #{params.name}
+      </if>
+    </select>
+
+    <!-- 分页列表查询 -->
+    <select id="list" resultType="HogwartsTestCase">
+      SELECT * FROM hogwarts_test_case htc WHERE htc.create_user_id =#{params.createUserId}
+      <if test="params.name !=null and params.name !=''">
+        and htc.case_name = #{params.name}
+      </if>
+      limit #{pageNum},#{pageSize}
+    </select>
 </mapper>

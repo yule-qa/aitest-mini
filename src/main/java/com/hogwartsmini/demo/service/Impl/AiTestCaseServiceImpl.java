@@ -1,5 +1,6 @@
 package com.hogwartsmini.demo.service.Impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hogwartsmini.demo.common.PageTableRequest;
 import com.hogwartsmini.demo.common.PageTableResponse;
 import com.hogwartsmini.demo.common.TokenDb;
@@ -52,7 +53,28 @@ public class AiTestCaseServiceImpl implements AiTestCaseService {
 
     @Override
     public ResultDto list(PageTableRequest<QueryHogwartsTestCaseListDto> pageTableRequest) {
-        return null;
+        Integer pageNum=pageTableRequest.getPageNum();
+        Integer pageSize=pageTableRequest.getPageSize();
+        QueryHogwartsTestCaseListDto params=pageTableRequest.getParams();
+        log.info("测试用例分页准备查询数据库，查询params"+params);
+        log.info("测试用例分页准备查询数据库，PageNum"+pageNum);
+        log.info("测试用例分页准备查询数据库，pageSize"+pageSize);
+        List<HogwartsTestCase> list=hogwartsTestCaseMapper.list(params,(pageNum-1) * pageSize,pageSize);
+        log.info("测试用例查询数据库，返回的list为"+list);
+        Integer count=hogwartsTestCaseMapper.count(params);
+
+        PageTableResponse pageTableResponse = new PageTableResponse();
+        pageTableResponse.setData(list);
+        pageTableResponse.setRecordsTotal(count);
+        log.info("测试用例列表查询，返回消息体"+ JSONObject.toJSONString(pageTableResponse));
+        return ResultDto.success("成功",pageTableResponse);
+    }
+
+    @Override
+    public ResultDto delete(HogwartsTestCase hogwartsTestCase) {
+        log.info("准备删除测试用例"+hogwartsTestCase.getId());
+        hogwartsTestCaseMapper.deleteByPrimaryKey(hogwartsTestCase);
+        return ResultDto.success("删除成功",hogwartsTestCase);
     }
 
 

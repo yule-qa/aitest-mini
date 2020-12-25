@@ -22,7 +22,6 @@ public interface AiTestCaseService {
      */
     public ResultDto save(TokenDto tokenDto, HogwartsTestCase hogwartsTestCase) throws IOException, URISyntaxException;
     public ResultDto list(PageTableRequest<QueryHogwartsTestCaseListDto> pageTableRequest);
-
-//    public ResultDto saveText(TokenDto tokenDto, HogwartsTestCase hogwartsTestCase) throws IOException, URISyntaxException;
+    public ResultDto delete(HogwartsTestCase hogwartsTestCase);
 
 }

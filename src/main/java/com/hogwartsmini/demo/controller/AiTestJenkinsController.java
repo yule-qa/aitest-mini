@@ -111,7 +111,6 @@ public class AiTestJenkinsController {
         //获取分页请求中的查询参数对象
         //讲当前用户id作为查询条件，防止用户数据混乱
         if(Objects.isNull(pageTableRequest.getParams())){
-//            pageTableRequest =new PageTableRequest<QueryHogwartsTestJenkinsListDto>();
             pageTableRequest.setParams(new QueryHogwartsTestJenkinsListDto());
         }
         pageTableRequest.getParams().setCreateUserId(tokenDto.getUserId());
