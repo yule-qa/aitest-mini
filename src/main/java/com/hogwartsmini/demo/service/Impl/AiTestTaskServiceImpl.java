@@ -217,11 +217,6 @@ public class AiTestTaskServiceImpl implements AiTestTaskService {
         return ResultDto.success("成功",pageTableResponse);
     }
 
-//    @Override
-//    public ResultDto<PageTableResponse<HogwartsTestTask>> list(PageTableRequest<QueryHogwartsTestTaskListDto> pageTableRequest) {
-//        return null;
-//    }
-//
 
     @Transactional(rollbackFor = Exception.class) //阻断事务，当抛异常时，主动停止执行并且回滚
     @Override
@@ -231,10 +226,10 @@ public class AiTestTaskServiceImpl implements AiTestTaskService {
         if(Objects.isNull(defaultJenkinsId)){
             return ResultDto.fail("默认JenkinsId为空 ");
         }
+
         HogwartsTestJenkins queryHogwartsTestJenkins=new HogwartsTestJenkins();
         queryHogwartsTestJenkins.setCreateUserId(tokenDto.getUserId());
         queryHogwartsTestJenkins.setId(defaultJenkinsId);
-
         HogwartsTestJenkins requestHogwartsTestJenkins=hogwartsTestJenkinsMapper.selectOne(queryHogwartsTestJenkins);
         if(Objects.isNull(requestHogwartsTestJenkins)){
             return ResultDto.fail("默认jenkins信息为空");
@@ -243,17 +238,15 @@ public class AiTestTaskServiceImpl implements AiTestTaskService {
         HogwartsTestUser queryHogwartsTestUser=new HogwartsTestUser();
         queryHogwartsTestUser.setId(tokenDto.getUserId());
         HogwartsTestUser resultHogwartsTestUser=hogwartsTestUserMapper.selectOne(queryHogwartsTestUser);
+
         //根据任务ID查询测试任务
         HogwartsTestTask queryHogwartsTestTask=new HogwartsTestTask();
         queryHogwartsTestTask.setId(hogwartsTestTask.getId());
-
-
         HogwartsTestTask resultHogwartsTestTask =hogwartsTestTaskMapper.selectOne(queryHogwartsTestTask);
+
         if(Objects.isNull(resultHogwartsTestTask)){
             return ResultDto.fail("任务信息不存在");
         }
-
-
         //获取测试命令并更新任务状态为执行中
         String testCommand =resultHogwartsTestTask.getTestCommand();
         resultHogwartsTestTask.setStatus(UserBaseStr.STATUS_TWO); // 设置状态为执行中
@@ -296,7 +289,26 @@ public class AiTestTaskServiceImpl implements AiTestTaskService {
 
     @Override
     public ResultDto<HogwartsTestTask> updateStatus(HogwartsTestTask hogwartsTestTask) {
-        return null;
+        HogwartsTestTask queryHogwartsTestTask = new HogwartsTestTask();
+        queryHogwartsTestTask.setId(hogwartsTestTask.getId());
+        queryHogwartsTestTask.setCreateUserId(hogwartsTestTask.getCreateUserId());
+
+        HogwartsTestTask resultHogwartsTestTask=hogwartsTestTaskMapper.selectOne(queryHogwartsTestTask);
+        //如果为空，则提示
+        if(Objects.isNull(resultHogwartsTestTask)){
+            return ResultDto.fail("未查到测试任务信息");
+        }
+        //如果任务已经完成，则不重复修改
+        if(UserBaseStr.STATUS_THREE.equals(hogwartsTestTask.getStatus())){
+            return ResultDto.fail("测试任务已完成，无需修改");
+        }
+        resultHogwartsTestTask.setUpdateTime(new Date());
+        if(UserBaseStr.STATUS_THREE.equals(hogwartsTestTask.getStatus())){
+            resultHogwartsTestTask.setStatus(UserBaseStr.STATUS_THREE);
+            resultHogwartsTestTask.setBuildUrl(hogwartsTestTask.getBuildUrl());
+            hogwartsTestTaskMapper.updateByPrimaryKey(resultHogwartsTestTask);
+        }
+        return ResultDto.success("成功");
     }
 
 

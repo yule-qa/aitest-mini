@@ -10,12 +10,14 @@ import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.task.AddHogwartsTestTaskDto;
 import com.hogwartsmini.demo.dto.task.StartTestDto;
 import com.hogwartsmini.demo.dto.task.TestTaskDto;
+import com.hogwartsmini.demo.dto.task.UpdateHogwartsTestTaskStatusDto;
 import com.hogwartsmini.demo.entity.HogwartsTestTask;
 import com.hogwartsmini.demo.service.AiTestTaskService;
 import com.hogwartsmini.demo.util.StrUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang.StringUtils;
@@ -104,7 +106,7 @@ public class AiTestTaskController {
 
     }
 
-    @ApiOperation("list接口")
+    @ApiOperation("任务列表接口")
     @GetMapping("list")    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
     public ResultDto<PageTableResponse<HogwartsTestTask>> list(HttpServletRequest request)  {
         HogwartsTestTask hogwartsTestTask=new HogwartsTestTask();
@@ -113,6 +115,38 @@ public class AiTestTaskController {
         hogwartsTestTask.setCreateUserId(tokenDto.getUserId());
         log.info("向service传递的请求参数"+JSONObject.toJSONString(hogwartsTestTask));
         return aiTestTaskService.list(hogwartsTestTask);
+    }
+
+    @ApiOperation("修改任务执行状态接口")
+    @PutMapping("status")    // 等同于上面的注解，是上面注解的简略化，表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
+    public ResultDto<HogwartsTestTask>  updateStatus(HttpServletRequest request , @RequestBody UpdateHogwartsTestTaskStatusDto updateHogwartsTestTaskStatusDto)  {
+        log.info("修改测试任务状态-入参"+JSONObject.toJSONString(updateHogwartsTestTaskStatusDto));
+        //判断参数为空
+        if(Objects.isNull(updateHogwartsTestTaskStatusDto)){
+            return ResultDto.fail("修改测试信息不能为空");
+        }
+        Integer taskId=updateHogwartsTestTaskStatusDto.getTaskId();
+        String buildUrl=updateHogwartsTestTaskStatusDto.getBuildUrl();
+        Integer status=updateHogwartsTestTaskStatusDto.getStatus();
+
+        if(Objects.isNull(taskId)){
+            return ResultDto.fail("测试任务id不能为空");
+        }
+        if(StringUtils.isEmpty(buildUrl)){
+            return ResultDto.fail("jenkins构建地址不能为空");
+        }
+        if(Objects.isNull(status)){
+            return ResultDto.fail("任务状态不能为空");
+        }
+        HogwartsTestTask hogwartsTestTask=new HogwartsTestTask();
+        hogwartsTestTask.setId(taskId);
+        hogwartsTestTask.setBuildUrl(buildUrl);
+        hogwartsTestTask.setStatus(status);
+
+        //获取Token
+        TokenDto tokenDto=tokenDb.getUserInfo(request.getHeader(UserBaseStr.LOGIN_TOKEN));
+        hogwartsTestTask.setCreateUserId(tokenDto.getUserId());
+        return aiTestTaskService.updateStatus(hogwartsTestTask);
     }
 
 
