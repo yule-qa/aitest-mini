@@ -67,6 +67,7 @@ public class JenkinsUtil {
         //开始有参构建
         job.build(map,true);
 
+
         return ResultDto.success("成功",hogwartsTestUser);
    }
 
@@ -74,11 +75,11 @@ public class JenkinsUtil {
 
     public static StringBuilder getUpdateTaskStatusUrl(RequestInfoDto requestInfoDto, HogwartsTestTask hogwartsTestTask){
         StringBuilder updateStatusUrl=new StringBuilder();
-        updateStatusUrl.append("curl -X PUT");
+        updateStatusUrl.append("curl -X PUT ");
         updateStatusUrl.append("\""+requestInfoDto.getBaseUrl()+"/task/status \" ");
         updateStatusUrl.append("-H \"Content-Type: application/json\" ");
-        updateStatusUrl.append("-H \"token:"+requestInfoDto.getToken()+"\"");
-        updateStatusUrl.append("-d");
+        updateStatusUrl.append("-H \"token:"+requestInfoDto.getToken()+"\" ");
+        updateStatusUrl.append("-d ");
 
         JSONObject json=new JSONObject();
         json.put("taskId",hogwartsTestTask.getId());

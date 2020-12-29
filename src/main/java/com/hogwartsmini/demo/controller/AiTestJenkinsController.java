@@ -71,7 +71,7 @@ public class AiTestJenkinsController {
         //通过tokenDB（是个map，结构{token:tokenDto}） 查询到token值对应的tokenDto
         TokenDto tokenDto =tokenDb.getUserInfo(tokenStr);
 
-        //将addHogwartsTestJenkinsDto属性，拷贝到hogwartsTestJenkins类里，有个条件，前后两个类中属性名字必须一致
+        //将addHogwartsTestJenkinsDto属性，拷贝到h-=gwartsTestJenkins类里，有个条件，前后两个类中属性名字必须一致
         BeanUtils.copyProperties(updateHogwartsTestJenkinsDto,hogwartsTestJenkins);
         //通过Dto里查询到用户信息
         hogwartsTestJenkins.setCreateUserId(tokenDto.getUserId());
@@ -109,7 +109,7 @@ public class AiTestJenkinsController {
 
         TokenDto tokenDto=tokenDb.getUserInfo(request.getHeader(UserBaseStr.LOGIN_TOKEN));
         //获取分页请求中的查询参数对象
-        //讲当前用户id作为查询条件，防止用户数据混乱
+        //将当前用户id作为查询条件，防止用户数据混乱
         if(Objects.isNull(pageTableRequest.getParams())){
             pageTableRequest.setParams(new QueryHogwartsTestJenkinsListDto());
         }
