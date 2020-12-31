@@ -38,6 +38,8 @@ public class JenkinsUtil {
         ClassPathResource classPathResource =new ClassPathResource("JenkinsConfigDir/hogwarts_start_jenkins_show.xml");
         InputStream inputStream=classPathResource.getInputStream();
         String jobConfiXml=FileUtil.getText(inputStream);
+        //替换创建job xml里的参数
+
         //todo 增加非空等校验
         String baseUrl=hogwartsTestJenkins.getUrl();
         String userName=hogwartsTestJenkins.getUserName();

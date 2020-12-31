@@ -11,7 +11,6 @@ import com.hogwartsmini.demo.dto.ResultDto;
 import com.hogwartsmini.demo.dto.TokenDto;
 import com.hogwartsmini.demo.dto.jenkins.OperateJenkinsJobDto;
 import com.hogwartsmini.demo.dto.task.AddHogwartsTestTaskDto;
-import com.hogwartsmini.demo.dto.task.QueryHogwartsTestTaskListDto;
 import com.hogwartsmini.demo.dto.task.TestTaskDto;
 import com.hogwartsmini.demo.entity.*;
 import com.hogwartsmini.demo.service.AiTestTaskService;
@@ -299,7 +298,7 @@ public class AiTestTaskServiceImpl implements AiTestTaskService {
             return ResultDto.fail("未查到测试任务信息");
         }
         //如果任务已经完成，则不重复修改
-        if(UserBaseStr.STATUS_THREE.equals(hogwartsTestTask.getStatus())){
+        if(UserBaseStr.STATUS_THREE.equals(resultHogwartsTestTask.getStatus())){
             return ResultDto.fail("测试任务已完成，无需修改");
         }
         resultHogwartsTestTask.setUpdateTime(new Date());

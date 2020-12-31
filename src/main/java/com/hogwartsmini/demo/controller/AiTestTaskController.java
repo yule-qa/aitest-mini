@@ -13,6 +13,7 @@ import com.hogwartsmini.demo.dto.task.TestTaskDto;
 import com.hogwartsmini.demo.dto.task.UpdateHogwartsTestTaskStatusDto;
 import com.hogwartsmini.demo.entity.HogwartsTestTask;
 import com.hogwartsmini.demo.service.AiTestTaskService;
+import com.hogwartsmini.demo.util.AddressUtils;
 import com.hogwartsmini.demo.util.StrUtils;
 
 import io.swagger.annotations.Api;
@@ -71,7 +72,7 @@ public class AiTestTaskController {
     }
     @ApiOperation("执行测试任务接口")
     @PostMapping("start")    // 表示，使用什么请求方式，以及请求路径，括号没有内容就没有路径，取父级路径（class上的）
-    public ResultDto startTest(HttpServletRequest request
+    public ResultDto startTask(HttpServletRequest request
             , @RequestBody StartTestDto startTaskDto) throws IOException, URISyntaxException {
         //参数校验
         if(Objects.isNull(startTaskDto)){
@@ -88,14 +89,17 @@ public class AiTestTaskController {
         hogwartsTestTask.setId(startTaskDto.getTaskId());
         hogwartsTestTask.setTestCommand(startTaskDto.getTestCommand());
 
-        //获取下方请求url
-        String url=request.getRequestURL().toString();
+        //获取下方请求url,
+        String requestUrl=request.getRequestURL().toString();
+        String localip=AddressUtils.getIps(requestUrl).get(0); // 127.0.0.1
+        String innerip= AddressUtils.getInnetIp();  //内网ip
+        String url =requestUrl.replace(localip,innerip);
         log.info("请求地址==="+url);
-        url= StrUtils.getHostAndPort(request.getRequestURL().toString());
+        String  baseurl= StrUtils.getHostAndPort(url);
 
         //用于存储后端服务baseUrl、token等数据
         RequestInfoDto requestInfoDto=new RequestInfoDto();
-        requestInfoDto.setBaseUrl(url);
+        requestInfoDto.setBaseUrl(baseurl);
         requestInfoDto.setRequestUrl(url);
         requestInfoDto.setToken(tokenDto.getToken());
 

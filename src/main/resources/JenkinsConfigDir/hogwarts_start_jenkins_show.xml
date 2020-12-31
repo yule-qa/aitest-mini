@@ -42,7 +42,7 @@
     <builders>
         <hudson.tasks.Shell>
             <command>
-                 pwd
+                pwd
                 . /etc/profile
                 eval "${testCommand}"
                 eval "${updateStatusData}"
