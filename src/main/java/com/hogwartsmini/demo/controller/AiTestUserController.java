@@ -136,4 +136,13 @@ public class AiTestUserController {
 
     }
 
+    @ApiOperation("用户登出接口")
+    @DeleteMapping("logout")
+    public ResultDto logout(HttpServletRequest request){
+
+        TokenDto tokenDto=tokenDb.removeUserInfo(request.getHeader(UserBaseStr.LOGIN_TOKEN));
+        log.info("用户登出--------->登出信息"+tokenDto);
+        return ResultDto.success("退出成功");
+    }
+
 }

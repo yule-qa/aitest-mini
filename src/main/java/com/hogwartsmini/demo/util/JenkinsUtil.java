@@ -58,7 +58,7 @@ public class JenkinsUtil {
             jenkinsServer.createJob(jobName,jobConfiXml,true);
             hogwartsTestUser.setStartTestJobName(jobName);
         }else{
-                jenkinsServer.updateJob(jobName,jobConfiXml,true);
+            jenkinsServer.updateJob(jobName,jobConfiXml,true);
         }
 
         Map<String, Job> jobMap=jenkinsServer.getJobs();
