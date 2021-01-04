@@ -258,7 +258,7 @@ public class AiTestTaskServiceImpl implements AiTestTaskService {
         //组装Jenkins构建参数
         Map<String,String> map=new HashMap<>();
         map.put("aitestBaseUrl",requestInfoDto.getBaseUrl());
-        map.put("token",requestInfoDto.getBaseUrl());
+        map.put("token",tokenDto.getToken());
         map.put("testCommand",testCommand);
         map.put("updateStatusData",updateStatusUrl);
         // 调用Jenkins

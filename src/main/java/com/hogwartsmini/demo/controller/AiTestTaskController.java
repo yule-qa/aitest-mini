@@ -93,8 +93,10 @@ public class AiTestTaskController {
         String requestUrl=request.getRequestURL().toString();
         String localip=AddressUtils.getIps(requestUrl).get(0); // 127.0.0.1
         String innerip= AddressUtils.getInnetIp();  //内网ip
+//        家里环境用外网
+//        String innerip= AddressUtils.getV4IP();  //外网ip
         String url =requestUrl.replace(localip,innerip);
-        log.info("请求地址==="+url);
+        log.info("jenkins 执行任务接口，jenkinsapi请求地址==="+url);
         String  baseurl= StrUtils.getHostAndPort(url);
 
         //用于存储后端服务baseUrl、token等数据

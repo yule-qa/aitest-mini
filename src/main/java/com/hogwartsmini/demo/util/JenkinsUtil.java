@@ -44,6 +44,10 @@ public class JenkinsUtil {
         String baseUrl=hogwartsTestJenkins.getUrl();
         String userName=hogwartsTestJenkins.getUserName();
         String password=hogwartsTestJenkins.getPassword();
+        System.out.println("jenkins请求地址"+baseUrl+"\n"+
+                            "用户名"+userName+"\n"+
+                            "密码"+password);
+
         //如果当遇见，jenkins并没有提供用户名密码，而是提供授权的方式，可以通过token当密码，进行唤起jenkins client
 
         //获取jenkins客户端对象，并获取版本号
