@@ -11,10 +11,12 @@ spring:   #这项配置一般都是spring-cloud 使用，用于区分哪个sprin
   application:
     name: aitest
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/Hogwarts-mini?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai  #allowMultiQueries=true 允许批量查询
-    #url: jdbc:mysql://192.168.31.105:3306/Hogwarts-mini?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai  #allowMultiQueries=true 允许批量查询
-    username: root
-    password: root
+   # url: jdbc:mysql://127.0.0.1:3306/Hogwarts-mini?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai  #allowMultiQueries=true 允许批量查询
+#    username: root
+#    password: root
+    url: jdbc:mysql://stuq.ceshiren.com:13306/aitest_mini?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai  #allowMultiQueries=true 允许批量查询
+    username: hogwarts2020
+    password: aitest@hogwarts2020
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis:
